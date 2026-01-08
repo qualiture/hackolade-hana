@@ -1,0 +1,21 @@
+{
+	"name": "real_vector",
+	"erdAbbreviation": "<vctr>",
+	"dtdAbbreviation": "[...]",
+	"parentType": "array",
+	"useSample": false,
+	"hiddenOnEntity": "view",
+	"defaultValues": {
+		"primaryKey": false,
+		"comments": "",
+		"dimension": 128
+	},
+	"descriptor": [
+		{
+			"schema": {
+				"mode": "real_vector"
+			},
+			"mode": "real_vector"
+		}
+	]
+}

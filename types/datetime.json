@@ -1,0 +1,49 @@
+{
+	"name": "datetime",
+	"erdAbbreviation": "<dt>",
+	"dtdAbbreviation": "{dt}",
+	"parentType": "string",
+	"useSample": true,
+	"sample": "2024-01-15 10:30:00",
+	"hiddenOnEntity": "view",
+	"defaultValues": {
+		"primaryKey": false,
+		"default": "",
+		"enum": [],
+		"sample": "",
+		"comments": "",
+		"pattern": "",
+		"format": "",
+		"mode": "timestamp"
+	},
+	"descriptor": [
+		{
+			"schema": {
+				"mode": "date"
+			},
+			"mode": "date",
+			"format": "YYYY-MM-DD"
+		},
+		{
+			"schema": {
+				"mode": "time"
+			},
+			"mode": "time",
+			"format": "HH:MM:SS"
+		},
+		{
+			"schema": {
+				"mode": "seconddate"
+			},
+			"mode": "seconddate",
+			"format": "YYYY-MM-DD HH:MM:SS"
+		},
+		{
+			"schema": {
+				"mode": "timestamp"
+			},
+			"mode": "timestamp",
+			"format": "YYYY-MM-DD HH:MM:SS.FFFFFFF"
+		}
+	]
+}

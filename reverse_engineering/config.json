@@ -1,0 +1,10 @@
+{
+	"errors": {
+		"NO_DATABASES": "There are no schemas in the SAP HANA instance",
+		"WRONG_CONNECTION": "Cannot connect to SAP HANA instance"
+	},
+	"defaultDdlType": "HANA",
+	"excludeDocKind": ["id"],
+	"connectionList": ["name", "host", "port", "userName"],
+	"helpUrl": ""
+}

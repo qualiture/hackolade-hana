@@ -1,0 +1,694 @@
+/*
+* Copyright © 2016-2024 by IntegrIT S.A. dba Hackolade.  All rights reserved.
+*
+* The copyright to the computer software herein is the property of IntegrIT S.A.
+* The software may be used and/or copied only with the written permission of
+* IntegrIT S.A. or in accordance with the terms and conditions stipulated in
+* the agreement/contract under which the software has been supplied.
+
+In order to define custom properties for any object's properties pane, you may copy/paste from the following,
+making sure that you maintain a proper JSON format.
+
+			{
+				"propertyName": "Simple text",
+				"propertyKeyword": "simpletextProp",
+				"propertyType": "text",
+				"sampleGen": "&containerName|&entityName|&random|<value>"
+			},
+			{
+				"propertyName": "Text area",
+				"propertyKeyword": "textareaProp",
+				"propertyTooltip": "Popup for multi-line text entry",
+				"propertyType": "details",
+				"template": "textarea"
+			},
+			{
+				"propertyName": "Dropdown selection",
+				"propertyKeyword": "dropdownProp",
+				"propertyTooltip": "Select from list of options",
+				"propertyType": "select",
+				"options": [
+					"Option 1",
+					"Option 2",
+					"Option 3",
+					"Option 4"
+				]
+			},
+			{
+				"propertyName": "Numeric",
+				"propertyKeyword": "numericProp",
+				"propertyValidate": true,
+				"propertyType": "numeric",
+				"valueType": "number",
+				"allowNegative": false,
+				"sampleGen": "&containerName|&entityName|&random|<value>"
+			},
+			{
+				"propertyName": "Checkbox",
+				"propertyKeyword": "checkboxProp",
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "Group",
+				"propertyKeyword": "grpProp",
+				"propertyType": "group",
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Simple Grp Text",
+						"propertyKeyword": "simpleGrpText",
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Group Number",
+						"propertyKeyword": "grpNumber",
+						"propertyType": "numeric",
+						"valueType": "number",
+						"allowNegative": false
+					}
+				]
+			},
+// “groupInput” can have the following states - 0 items, 1 item, and many items.
+// “blockInput” has only 2 states - 0 items or 1 item.
+// This gives us an easy way to represent it as an object and not as an array internally which is beneficial for processing
+// and forward-engineering in particular.
+			{
+				"propertyName": "Block",
+				"propertyKeyword": "grpProp",
+				"propertyType": "block",
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Simple Grp Text",
+						"propertyKeyword": "simpleGrpText",
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Group Number",
+						"propertyKeyword": "grpNumber",
+						"propertyType": "numeric",
+						"valueType": "number",
+						"allowNegative": false
+					}
+				]
+			},
+			{
+				"propertyName": "Field List",
+				"propertyKeyword": "keyList",
+				"propertyType": "fieldList",
+				"template": "orderedList"
+			},
+			{
+				"propertyName": "List with attribute",
+				"propertyKeyword": "keyListOrder",
+				"propertyType": "fieldList",
+				"template": "orderedList",
+				"attributeList": [
+					"ascending",
+					"descending"
+				]
+			}
+
+*/
+[
+	{
+		"lowerTab": "Details",
+		"structure": [
+			{
+				"propertyName": "Table ID",
+				"propertyKeyword": "tableID",
+				"propertyType": "text"
+			},
+			{
+				"propertyName": "Comments",
+				"propertyKeyword": "description",
+				"shouldValidate": false,
+				"propertyTooltip": "comments",
+				"addTimestampButton": false,
+				"propertyType": "details",
+				"template": "codeEditor",
+				"templateOptions": {
+					"editorDialect": "markdown"
+				}
+			},
+			{
+				"propertyName": "Table type",
+				"propertyKeyword": "tableType",
+				"propertyTooltip": "Defines the type of table to create.",
+				"propertyType": "select",
+				"options": ["column", "row", "virtual", "extended", "collection"]
+			},
+			{
+				"propertyName": "Public",
+				"propertyKeyword": "public",
+				"propertyTooltip": "Only valid for column store tables",
+				"propertyType": "checkbox",
+				"dependency": {
+					"key": "tableType",
+					"value": "column"
+				}
+			},
+			{
+				"propertyName": "Temporary",
+				"propertyKeyword": "temporary",
+				"propertyType": "select",
+				"options": ["", "global", "local"]
+			},
+			{
+				"propertyName": "Like table clause",
+				"propertyKeyword": "like_table_clause",
+				"propertyTooltip": "To create a table with the same definition as another table, including columns, indexes, and table options. Foreign key definitions, as well as any DATA DIRECTORY or INDEX DIRECTORY table options specified on the original table, will NOT be created.",
+				"propertyType": "selecthashed",
+				"template": "entities",
+				"withEmptyOption": true,
+				"excludeCurrent": true
+			},
+			{
+				"propertyName": "Table creation syntax",
+				"propertyKeyword": "table_creation_syntax",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false,
+				"dependency": {
+					"key": "like_table_clause",
+					"exists": true
+				}
+			},
+			{
+				"propertyName": "As subquery",
+				"propertyKeyword": "as_subquery",
+				"propertyTooltip": "Creates a table and fills it with the data computed by the subquery. For more information about subqueries, see the SELECT statement topic.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "System versioning spec",
+				"propertyKeyword": "system_versioning_spec",
+				"propertyTooltip": "Configures system versioning for a table. System-versioning allows change tracking on database tables.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "App time period spec",
+				"propertyKeyword": "application_time_period_spec",
+				"propertyTooltip": "Creates an application-time period table. This option is only supported for column store tables.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Bi temporal table spec",
+				"propertyKeyword": "bi_temporal_table_spec",
+				"propertyTooltip": "Creates a bi-temporal table, which is a table that has both system-versioning and an application-time period defined on it.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Association clause",
+				"propertyKeyword": "association_clause",
+				"propertyTooltip": "Creates an application-time period table. This option is only supported for column store tables.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Annotation clause",
+				"propertyKeyword": "annotation_clause",
+				"propertyTooltip": "Specifies table-, column-, and parameter-level annotations in the form of key/value pairs. You can reference annotations in subsequent queries to filter results.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Mask clause",
+				"propertyKeyword": "mask_clause",
+				"propertyTooltip": "Adds data masking to the contents of the specified columns. Data masking transforms confidential data so that it appears meaningless to users who don't have the privileges required to view it.",
+				"propertyType": "fieldList",
+				"template": "orderedList"
+			},
+			{
+				"propertyName": "Logging",
+				"propertyKeyword": "logging",
+				"propertyTooltip": "Specifies whether or not logging was on for the table at last restart time",
+				"propertyType": "checkbox"
+			},
+			{
+				"propertyName": "Auto merge",
+				"propertyKeyword": "auto_merge_option",
+				"propertyTooltip": "Specifies that an automatic delta merge is triggered; this is the default.",
+				"propertyType": "checkbox",
+				"defaultValue": true
+			},
+			{
+				"propertyName": "Unload priority",
+				"propertyKeyword": "unload_priority",
+				"propertyType": "numeric",
+				"valueType": "number",
+				"allowNegative": false,
+				"minValue": 0,
+				"maxValue": 9,
+				"step": 1
+			},
+			{
+				"propertyName": "Partition clause",
+				"propertyKeyword": "partition_clause",
+				"propertyTooltip": "Configures system versioning for a table. System-versioning allows change tracking on database tables.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Persistent memory clause",
+				"propertyKeyword": "persistent_memory_spec_clause",
+				"propertyTooltip": "Enables or disables persistent memory storage preference at the table, range partition, or column level, depending on where the clause is situated in the CREATE statement.",
+				"propertyType": "select",
+				"options": ["", "on", "off"]
+			},
+			{
+				"propertyName": "Group option list",
+				"propertyKeyword": "group_option_list",
+				"propertyTooltip": "Specifies the group type, subtype, and name, and whether the table is the leader of the table group.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Location clause",
+				"propertyKeyword": "location_clause",
+				"propertyTooltip": "Specifies the index servers on which the partitions are created in a round-robin scheme.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "With replica list",
+				"propertyKeyword": "with_replica_list",
+				"propertyTooltip": "Creates a table replica at the same time the source table is created.  To create a column-wise replica that is based on an existing table, use the LIKE clause",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false,
+				"dependency": {
+					"key": "replica_clause",
+					"exists": true
+				}
+			},
+			{
+				"propertyName": "Global temporary option",
+				"propertyKeyword": "global_temporary_option",
+				"propertyTooltip": "Sets data availability of global temporary tables within session or transaction level.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false,
+				"dependency": {
+					"key": "temporary",
+					"exists": "global"
+				}
+			},
+			{
+				"propertyName": "Unused retention period option",
+				"propertyKeyword": "unused_retention_period_option",
+				"propertyTooltip": "Defines the retention period for a table or table partitions in seconds.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Record commit timestamp clause",
+				"propertyKeyword": "record_commit_timestamp_clause",
+				"propertyTooltip": "Specifies that the COMMIT timestamp of a row is tracked. If this option is enabled, then every row is associated with the COMMIT timestamp of the last transaction that performed a DML operation on the row.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false,
+				"dependency": {
+					"type": "or",
+					"values": [
+						{
+							"key": "temporary",
+							"value": "global"
+						},
+						{
+							"key": "temporary",
+							"value": "local"
+						},
+						{
+							"type": "not",
+							"values": {
+								"key": "tableType",
+								"value": "virtual"
+							}
+						}
+					]
+				}
+			},
+			{
+				"propertyName": "NUMA node preference clause",
+				"propertyKeyword": "numa_node_preference_clause",
+				"propertyTooltip": "Sets the NUMA node preferences. This clause can be set in various locations such as range partition definitions (not hash or round-robin) and column definitions.",
+				"propertyType": "details",
+				"template": "textarea",
+				"markdown": false
+			},
+			{
+				"propertyName": "Loadable unit",
+				"propertyKeyword": "load_unit",
+				"propertyTooltip": "Specifies whether or not logging was on for the table at last restart time",
+				"propertyType": "select",
+				"options": ["", "column", "page"]
+			},
+			{
+				"propertyName": "Remarks",
+				"propertyKeyword": "comments",
+				"propertyTooltip": "remarks",
+				"addTimestampButton": true,
+				"propertyType": "details",
+				"template": "codeEditor",
+				"templateOptions": {
+					"editorDialect": "markdown"
+				},
+				"valueType": "string"
+			}
+		],
+		"columnsRatio": [3.7, 5]
+	},
+	{
+		"lowerTab": "Composite keys",
+		"structure": [
+			{
+				"propertyName": "Primary key",
+				"propertyType": "group",
+				"groupItemLimit": 1,
+				"propertyKeyword": "primaryKey",
+				"propertyTooltip": {
+					"disabled": [
+						{
+							"tooltip": "Remove the existing single column primary key definition prior to unlock the possibility to create a composite primary key definition for this table",
+							"dependency": {
+								"type": "and",
+								"values": [
+									{
+										"level": "children",
+										"key": "primaryKey",
+										"value": true
+									},
+									{
+										"type": "not",
+										"values": {
+											"level": "children",
+											"key": "compositePrimaryKey",
+											"value": true
+										}
+									}
+								]
+							}
+						},
+						{
+							"tooltip": "Remove or update the existing composite primary key definition prior to unlock the possibility to create a new composite primary key definition for this table",
+							"dependency": {
+								"key": "primaryKey",
+								"minLength": 1
+							}
+						}
+					]
+				},
+				"structure": [
+					{
+						"propertyName": "Constraint name",
+						"propertyKeyword": "constraintName",
+						"propertyTooltip": "",
+						"propertyType": "text",
+						"validation": {
+							"indexKey": "compositePrimaryKey",
+							"message": "A primary key constraint cannot be created without any primary key selected"
+						}
+					},
+					{
+						"propertyName": "Key",
+						"propertyKeyword": "compositePrimaryKey",
+						"propertyType": "primaryKeySetter",
+						"requiredProperty": true,
+						"abbr": "pk"
+					},
+					{
+						"propertyName": "Comment",
+						"propertyKeyword": "indexComment",
+						"propertyTooltip": "comment",
+						"addTimestampButton": false,
+						"propertyType": "details",
+						"template": "codeEditor",
+						"templateOptions": {
+							"editorDialect": "markdown"
+						}
+					}
+				],
+				"disabledOnCondition": [
+					{
+						"level": "children",
+						"value": {
+							"type": "and",
+							"values": [
+								{
+									"key": "primaryKey",
+									"value": true
+								},
+								{
+									"type": "or",
+									"values": [
+										{
+											"key": "compositePrimaryKey",
+											"value": false
+										},
+										{
+											"key": "compositePrimaryKey",
+											"exist": false
+										}
+									]
+								},
+								{
+									"type": "or",
+									"values": [
+										{
+											"key": "compositeUniqueKey",
+											"value": false
+										},
+										{
+											"key": "compositeUniqueKey",
+											"exist": false
+										}
+									]
+								}
+							]
+						}
+					}
+				]
+			},
+			{
+				"propertyName": "Unique key",
+				"propertyType": "group",
+				"propertyKeyword": "uniqueKey",
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Constraint name",
+						"propertyKeyword": "constraintName",
+						"propertyTooltip": "",
+						"propertyType": "text",
+						"validation": {
+							"indexKey": "compositeUniqueKey",
+							"message": "A unique key constraint cannot be created without any unique key selected"
+						}
+					},
+					{
+						"propertyName": "Key",
+						"propertyKeyword": "compositeUniqueKey",
+						"propertyType": "compositeKeySetter",
+						"disabledItemStrategy": "default",
+						"setPrimaryKey": false,
+						"template": "collectiontree",
+						"requiredProperty": true,
+						"isCompositeKey": true,
+						"abbr": "uk"
+					},
+					{
+						"propertyName": "Comment",
+						"propertyKeyword": "indexComment",
+						"propertyTooltip": "comment",
+						"addTimestampButton": false,
+						"propertyType": "details",
+						"template": "codeEditor",
+						"templateOptions": {
+							"editorDialect": "markdown"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"lowerTab": "Indexes",
+		"structure": [
+			{
+				"propertyName": "Index",
+				"propertyType": "group",
+				"propertyKeyword": "Indxs",
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Name",
+						"propertyKeyword": "indxName",
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Activated",
+						"propertyKeyword": "isActivated",
+						"propertyTooltip": "Deactivated item will be not included in DDL script.",
+						"propertyType": "checkbox",
+						"defaultValue": true
+					},
+					{
+						"propertyName": "Description",
+						"propertyKeyword": "indxDescription",
+						"propertyTooltip": "description",
+						"propertyType": "details",
+						"template": "codeEditor",
+						"templateOptions": {
+							"editorDialect": "markdown"
+						}
+					},
+					{
+						"propertyName": "Unique",
+						"propertyKeyword": "uniqueIndex",
+						"propertyTooltip": "Specifies that the index must have unique values.",
+						"propertyType": "checkbox"
+					},
+					/* Not sure to know how to make this work, depending on the table type
+					 */
+					{
+						"propertyName": "Type",
+						"propertyKeyword": "rs_tree_type_index",
+						"propertyTooltip": "Specifies the tree type for the index. Tree type specification is only applicable to row store tables.",
+						"propertyType": "select",
+						"options": ["", "btree", "cpbtree"],
+						"dependency": {
+							"level": "parent",
+							"key": "tableType",
+							"value": "row"
+						}
+					},
+					{
+						"propertyName": "Type",
+						"propertyKeyword": "cs_inverted_type_index",
+						"propertyTooltip": "Specifies the inverted index type for column store tables. Inverted index types are only applicable to column store tables.",
+						"propertyType": "select",
+						"options": ["", "inverted hash", "inverted value", "inverted individual"],
+						"dependency": {
+							"level": "parent",
+							"key": "tableType",
+							"value": "column"
+						}
+					},
+					{
+						"propertyName": "Load unit",
+						"propertyKeyword": "load_unit",
+						"propertyTooltip": "Specifies the load unit for the index. ",
+						"propertyType": "select",
+						"options": ["", "column", "page"],
+						"dependency": {
+							"key": "cs_inverted_type_index",
+							"value": "inverted value"
+						}
+					},
+					{
+						"propertyName": "Keys",
+						"propertyKeyword": "indxKey",
+						"propertyType": "fieldList",
+						"template": "orderedList",
+						"attributeList": ["asc", "desc"]
+					},
+					{
+						"propertyName": "Fill factor",
+						"propertyKeyword": "fillfactor",
+						"propertyTooltip": "Specifies how each node of a new index is filled. It is a percentage value of integer from 50 to 100, and the default value is 90.",
+						"propertyType": "numeric",
+						"valueType": "number",
+						"allowNegative": false,
+						"step": 1,
+						"minValue": 50,
+						"maxValue": 100,
+						"step": 1
+					},
+					{
+						"propertyName": "No wait",
+						"propertyKeyword": "nowait",
+						"propertyTooltip": "Specifies that the CREATE INDEX statement returns an error immediately in case a table lock cannot be acquired.",
+						"propertyType": "checkbox"
+					},
+					{
+						"propertyName": "Onine",
+						"propertyKeyword": "online",
+						"propertyTooltip": "For column store tables, the ONLINE keyword allows the creation of the index without placing an exclusive lock on the table. This is only supported for non-replicated, non-history tables.  For row store tables, you can specify ONLINE to not place an exclusive lock on the table and enable read access during index creation.",
+						"propertyType": "checkbox"
+					},
+					{
+						"propertyName": "Comments",
+						"propertyKeyword": "indxComments",
+						"propertyTooltip": "comments",
+						"addTimestampButton": false,
+						"propertyType": "details",
+						"template": "codeEditor",
+						"templateOptions": {
+							"editorDialect": "markdown"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"lowerTab": "Check Constraints",
+		"structure": [
+			{
+				"propertyName": "Check Constraint",
+				"propertyType": "group",
+				"propertyKeyword": "chkConstr",
+				"propertyTooltip": "",
+				"structure": [
+					{
+						"propertyName": "Name",
+						"propertyKeyword": "chkConstrName",
+						"propertyTooltip": "",
+						"propertyType": "text"
+					},
+					{
+						"propertyName": "Expression",
+						"propertyKeyword": "constrExpression",
+						"propertyTooltip": "Expression",
+						"propertyType": "details",
+						"template": "textarea",
+						"markdown": false
+					},
+					{
+						"propertyName": "Description",
+						"propertyKeyword": "constrDescription",
+						"propertyTooltip": "description",
+						"propertyType": "details",
+						"template": "textarea"
+					},
+					{
+						"propertyName": "Comments",
+						"propertyKeyword": "constrComments",
+						"propertyTooltip": "comments",
+						"addTimestampButton": false,
+						"propertyType": "details",
+						"template": "textarea"
+					}
+				]
+			}
+		]
+	}
+]

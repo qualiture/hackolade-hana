@@ -1,0 +1,109 @@
+[
+	{
+		"lowerTab": "Connection",
+		"structure": [
+			{
+				"inputLabel": "Name",
+				"inputKeyword": "name",
+				"inputType": "text",
+				"inputPlaceholder": "Name"
+			},
+			{
+				"inputLabel": "Host",
+				"inputKeyword": "host",
+				"description": "Specify the host of your SAP HANA Cloud instance (e.g., your-instance.hanacloud.ondemand.com)",
+				"inputType": "text",
+				"regex": "([^\\s])"
+			},
+			{
+				"inputLabel": "Port",
+				"inputKeyword": "port",
+				"description": "Specify the port number (default 443 for HANA Cloud)",
+				"inputType": "numeric",
+				"defaultValue": 443
+			},
+			{
+				"inputLabel": "Database",
+				"inputKeyword": "database",
+				"description": "Specify the database name (optional for single-database instances)",
+				"inputType": "text",
+				"inputPlaceholder": "Database"
+			}
+		]
+	},
+	{
+		"tab": "Authentication",
+		"structure": [
+			{
+				"inputLabel": "Authentication method",
+				"inputKeyword": "authMethod",
+				"inputType": "select",
+				"defaultValue": "Username / Password",
+				"options": [{ "value": "Username / Password", "label": "Username / Password" }],
+				"disabled": true
+			},
+			{
+				"inputLabel": "User Name",
+				"inputKeyword": "userName",
+				"inputType": "text",
+				"inputPlaceholder": "User Name",
+				"dependency": {
+					"key": "authMethod",
+					"value": ["Username / Password"]
+				},
+				"validation": {
+					"regex": "([^\\s])"
+				}
+			},
+			{
+				"inputLabel": "Password",
+				"inputKeyword": "userPassword",
+				"inputType": "password",
+				"inputPlaceholder": "Password",
+				"dependency": {
+					"key": "authMethod",
+					"value": ["Username / Password"]
+				},
+				"isHiddenKey": true,
+				"validation": {
+					"regex": "([^\\s])"
+				}
+			}
+		]
+	},
+	{
+		"tab": "SSL",
+		"structure": [
+			{
+				"inputLabel": "SSL",
+				"inputKeyword": "ssl",
+				"inputType": "checkbox",
+				"defaultValue": true,
+				"description": "Enable SSL encryption (required for HANA Cloud)"
+			},
+			{
+				"inputLabel": "Validate Certificate",
+				"inputKeyword": "sslValidateCertificate",
+				"inputType": "checkbox",
+				"defaultValue": true,
+				"description": "Validate the server SSL certificate",
+				"dependency": {
+					"key": "ssl",
+					"value": [true]
+				}
+			},
+			{
+				"inputLabel": "Trust Store",
+				"inputKeyword": "sslTrustStore",
+				"inputType": "file",
+				"inputPlaceholder": "Path to trust store file",
+				"extensions": ["pem", "crt", "cer"],
+				"description": "Path to SSL trust store file (optional)",
+				"dependency": {
+					"key": "ssl",
+					"value": [true]
+				}
+			}
+		]
+	}
+]

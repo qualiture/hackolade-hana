@@ -1,0 +1,71 @@
+{
+	"name": "geospatial",
+	"erdAbbreviation": "<geo>",
+	"dtdAbbreviation": "{geo}",
+	"parentType": "string",
+	"useSample": false,
+	"hiddenOnEntity": "view",
+	"defaultValues": {
+		"required": false,
+		"primaryKey": false,
+		"comments": "",
+		"mode": "st_geometry",
+		"srid": 0
+	},
+	"descriptor": [
+		{
+			"schema": {
+				"mode": "st_geometry"
+			},
+			"mode": "st_geometry"
+		},
+		{
+			"schema": {
+				"mode": "st_point"
+			},
+			"mode": "st_point"
+		},
+		{
+			"schema": {
+				"mode": "st_circularstring"
+			},
+			"mode": "st_circularstring"
+		},
+		{
+			"schema": {
+				"mode": "st_linestring"
+			},
+			"mode": "st_linestring"
+		},
+		{
+			"schema": {
+				"mode": "st_polygon"
+			},
+			"mode": "st_polygon"
+		},
+		{
+			"schema": {
+				"mode": "st_multipoint"
+			},
+			"mode": "st_multipoint"
+		},
+		{
+			"schema": {
+				"mode": "st_multilinestring"
+			},
+			"mode": "st_multilinestring"
+		},
+		{
+			"schema": {
+				"mode": "st_multipolygon"
+			},
+			"mode": "st_multipolygon"
+		},
+		{
+			"schema": {
+				"mode": "st_geometrycollection"
+			},
+			"mode": "st_geometrycollection"
+		}
+	]
+}

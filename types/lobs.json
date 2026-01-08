@@ -1,0 +1,86 @@
+{
+	"name": "lobs",
+	"erdAbbreviation": "<lob>",
+	"dtdAbbreviation": "{LOB}",
+	"parentType": "binary",
+	"useSample": false,
+	"hiddenOnEntity": "view",
+	"jsonType": {
+		"order": 1,
+		"jsonRoot": true,
+		"source": {
+			"type": "or",
+			"values": [
+				{
+					"key": "mode",
+					"value": "blob"
+				},
+				{
+					"key": "mode",
+					"value": "clob"
+				},
+				{
+					"key": "mode",
+					"value": "nclob"
+				},
+				{
+					"key": "mode",
+					"value": "text"
+				},
+				{
+					"key": "mode",
+					"value": "bintext"
+				}
+			]
+		}
+	},
+	"defaultValues": {
+		"primaryKey": false,
+		"mode": "nclob"
+	},
+	"descriptor": [
+		{
+			"schema": {
+				"mode": "blob"
+			},
+			"mode": "blob"
+		},
+		{
+			"schema": {
+				"mode": "clob"
+			},
+			"mode": "clob"
+		},
+		{
+			"schema": {
+				"mode": "nclob"
+			},
+			"mode": "nclob"
+		},
+		{
+			"schema": {
+				"mode": "text"
+			},
+			"mode": "text"
+		},
+		{
+			"schema": {
+				"mode": "bintext"
+			},
+			"mode": "bintext"
+		}
+	],
+	"subtypes": {
+		"object": {
+			"parentType": "jsonObject",
+			"childValueType": ["jsonString", "jsonNumber", "jsonObject", "jsonArray", "jsonBoolean", "jsonNull"]
+		},
+		"array": {
+			"parentType": "jsonArray",
+			"childValueType": ["jsonString", "jsonNumber", "jsonObject", "jsonArray", "jsonBoolean", "jsonNull"]
+		},
+		"string": {
+			"parentType": "string"
+		}
+	}
+}
