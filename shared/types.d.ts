@@ -28,7 +28,8 @@ type RecordSamplingSettings = {
 };
 
 enum AuthTypeEnum {
-	usernamePassword = 'username_password',
+	credentials = 'credentials',
+	externalbrowser = 'externalbrowser',
 }
 
 type AuthType = `${AuthTypeEnum}`;
@@ -41,6 +42,11 @@ type ConnectionInfo = {
 	userName: string;
 	userPassword: string;
 	database: string;
+	schema?: string;
+	ssl?: boolean;
+	sslValidateCertificate?: boolean;
+	sslCryptoProvider?: string;
+	sslTrustStore?: string;
 	target: AppTarget;
 	id: UUID;
 	appVersion: string;

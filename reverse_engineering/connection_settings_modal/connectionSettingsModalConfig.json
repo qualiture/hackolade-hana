@@ -35,12 +35,14 @@
 		"tab": "Authentication",
 		"structure": [
 			{
-				"inputLabel": "Authentication method",
-				"inputKeyword": "authMethod",
+				"inputLabel": "Auth type",
+				"inputKeyword": "authType",
 				"inputType": "select",
-				"defaultValue": "Username / Password",
-				"options": [{ "value": "Username / Password", "label": "Username / Password" }],
-				"disabled": true
+				"defaultValue": "credentials",
+				"options": [
+					{ "value": "credentials", "label": "Username / Password" },
+					{ "value": "externalbrowser", "label": "Identity Provider SSO (via external browser)" }
+				]
 			},
 			{
 				"inputLabel": "User Name",
@@ -48,8 +50,8 @@
 				"inputType": "text",
 				"inputPlaceholder": "User Name",
 				"dependency": {
-					"key": "authMethod",
-					"value": ["Username / Password"]
+					"key": "authType",
+					"value": ["credentials"]
 				},
 				"validation": {
 					"regex": "([^\\s])"
@@ -61,12 +63,22 @@
 				"inputType": "password",
 				"inputPlaceholder": "Password",
 				"dependency": {
-					"key": "authMethod",
-					"value": ["Username / Password"]
+					"key": "authType",
+					"value": ["credentials"]
 				},
 				"isHiddenKey": true,
 				"validation": {
 					"regex": "([^\\s])"
+				}
+			},
+			{
+				"inputLabel": "User Name",
+				"inputKeyword": "userName",
+				"inputType": "text",
+				"inputPlaceholder": "User Name (optional, leave empty for IdP user)",
+				"dependency": {
+					"key": "authType",
+					"value": ["externalbrowser"]
 				}
 			}
 		]

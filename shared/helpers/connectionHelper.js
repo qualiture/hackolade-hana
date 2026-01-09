@@ -16,13 +16,31 @@ let connection = null;
  * @returns {object}
  */
 const buildConnectionParams = connectionInfo => {
+	const authType = connectionInfo.authType || 'credentials';
+	const isExternalBrowser = authType === 'externalbrowser';
+
 	const params = {
 		serverNode: `${connectionInfo.host}:${connectionInfo.port || 443}`,
-		uid: connectionInfo.userName,
-		pwd: connectionInfo.userPassword,
 		encrypt: connectionInfo.ssl !== false ? 'true' : 'false',
 		sslValidateCertificate: connectionInfo.sslValidateCertificate !== false ? 'true' : 'false',
 	};
+
+	// Handle authentication based on auth type
+	if (isExternalBrowser) {
+		// Identity Provider SSO via external browser
+		// Uses SAML assertion via browser-based authentication
+		params.sessionClient = 'XSA_ADMIN';
+		params.authenticator = 'EXTERNALBROWSER';
+
+		// Username is optional for external browser auth - IdP will provide it
+		if (connectionInfo.userName) {
+			params.uid = connectionInfo.userName;
+		}
+	} else {
+		// Traditional username/password authentication
+		params.uid = connectionInfo.userName;
+		params.pwd = connectionInfo.userPassword;
+	}
 
 	if (connectionInfo.database) {
 		params.databaseName = connectionInfo.database;
@@ -50,9 +68,16 @@ const buildConnectionParams = connectionInfo => {
  */
 const createConnection = async ({ connectionInfo, logger }) => {
 	const params = buildConnectionParams(connectionInfo);
+	const authType = connectionInfo.authType || 'credentials';
+	const isExternalBrowser = authType === 'externalbrowser';
 
 	logger.info('Connecting to SAP HANA Cloud...');
 	logger.info(`Host: ${params.serverNode}`);
+	logger.info(`Authentication: ${isExternalBrowser ? 'Identity Provider SSO (via external browser)' : 'Username/Password'}`);
+
+	if (isExternalBrowser) {
+		logger.info('Opening browser for SSO authentication...');
+	}
 
 	return new Promise((resolve, reject) => {
 		const conn = hana.createConnection();
