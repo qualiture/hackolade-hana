@@ -92,6 +92,7 @@
     "dependencies": {
         "@sap/hana-client": "^2.27.19",
         "async": "3.2.5",
+        "axios": "^1.6.8",
         "lodash": "4.17.21"
     }
 }

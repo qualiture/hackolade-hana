@@ -70,16 +70,6 @@
 				"validation": {
 					"regex": "([^\\s])"
 				}
-			},
-			{
-				"inputLabel": "User Name",
-				"inputKeyword": "userName",
-				"inputType": "text",
-				"inputPlaceholder": "User Name (optional, leave empty for IdP user)",
-				"dependency": {
-					"key": "authType",
-					"value": ["externalbrowser"]
-				}
 			}
 		]
 	},

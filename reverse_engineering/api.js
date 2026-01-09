@@ -13,6 +13,7 @@ const { instanceHelper } = require('../shared/helpers/instanceHelper');
 const { logHelper } = require('../shared/helpers/logHelper');
 const { TABLE_TYPE } = require('../constants/constants');
 const { nameHelper } = require('../shared/helpers/nameHelper');
+const ssoHelper = require('./helpers/ssoHelper');
 
 /**
  * @param {ConnectionInfo} connectionInfo
@@ -36,6 +37,28 @@ const disconnect = async (connectionInfo, appLogger, callback) => {
 };
 
 /**
+ * Get SSO URL for external browser authentication
+ * @param {ConnectionInfo} connectionInfo
+ * @param {AppLogger} appLogger
+ * @param {Callback} callback
+ */
+const getExternalBrowserUrl = async (connectionInfo, appLogger, callback) => {
+	const logger = logHelper.createLogger({
+		title: 'Get SSO URL',
+		hiddenKeys: connectionInfo.hiddenKeys,
+		logger: appLogger,
+	});
+
+	try {
+		const ssoData = await ssoHelper.getSsoUrlData(logger, connectionInfo);
+		callback(null, ssoData);
+	} catch (error) {
+		logger.error(error);
+		callback(error);
+	}
+};
+
+/**
  * @param {ConnectionInfo} connectionInfo
  * @param {AppLogger} appLogger
  * @param {Callback} callback
@@ -50,6 +73,12 @@ const testConnection = async (connectionInfo, appLogger, callback, app) => {
 
 	try {
 		logger.info(connectionInfo);
+
+		// For external browser auth, return SSO URL instead of testing connection directly
+		if (connectionInfo.authType === 'externalbrowser') {
+			await getExternalBrowserUrl(connectionInfo, appLogger, callback);
+			return;
+		}
 
 		const connection = await connectionHelper.connect({ connectionInfo, logger });
 		const version = await instanceHelper.getDbVersion({ connection });
@@ -250,4 +279,5 @@ module.exports = {
 	getSchemaNames,
 	getDbCollectionsNames,
 	getDbCollectionsData,
+	getExternalBrowserUrl,
 };

@@ -12,6 +12,7 @@ const hana = require('@sap/hana-client');
 let connection = null;
 
 /**
+ * Build connection parameters for SAP HANA Cloud
  * @param {ConnectionInfo} connectionInfo
  * @returns {object}
  */
@@ -28,11 +29,13 @@ const buildConnectionParams = connectionInfo => {
 	// Handle authentication based on auth type
 	if (isExternalBrowser) {
 		// Identity Provider SSO via external browser
-		// Uses SAML assertion via browser-based authentication
-		params.sessionClient = 'XSA_ADMIN';
-		params.authenticator = 'EXTERNALBROWSER';
+		// For SSO, we use the token returned from the browser authentication
+		if (connectionInfo.token) {
+			// Use JWT token from SSO flow
+			params.token = connectionInfo.token;
+		}
 
-		// Username is optional for external browser auth - IdP will provide it
+		// Username may be provided or derived from IdP
 		if (connectionInfo.userName) {
 			params.uid = connectionInfo.userName;
 		}
@@ -73,11 +76,7 @@ const createConnection = async ({ connectionInfo, logger }) => {
 
 	logger.info('Connecting to SAP HANA Cloud...');
 	logger.info(`Host: ${params.serverNode}`);
-	logger.info(`Authentication: ${isExternalBrowser ? 'Identity Provider SSO (via external browser)' : 'Username/Password'}`);
-
-	if (isExternalBrowser) {
-		logger.info('Opening browser for SSO authentication...');
-	}
+	logger.info(`Authentication: ${isExternalBrowser ? 'Identity Provider SSO' : 'Username/Password'}`);
 
 	return new Promise((resolve, reject) => {
 		const conn = hana.createConnection();
